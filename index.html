@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Verifica di sicurezza & Preferenze 🍪</title>
+  <!-- Titolo scheda modificato come richiesto -->
+  <title>Appuntamento con Torello 🐾</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
@@ -307,7 +308,6 @@
     <div id="step1">
       <div style="font-size: 3.2rem; margin-bottom: 0.3rem;">🐶💌</div>
       <h1>Vuoi uscire con me?</h1>
-  
       
       <div class="button-group" id="btnContainer">
         <button class="btn btn-yes" id="btnYes" onclick="acceptInvitation()">Sì 🥰</button>
@@ -346,14 +346,15 @@
   </div>
 
   <script>
-  
-    const NTFY_TOPIC = "appuntamento"; 
-    // =========================================
+    // ==========================================
+ 
+    const NTFY_TOPIC = "appuntamento-torello"; 
+    // ==========================================
+
     function acceptCookies() {
       const banner = document.getElementById('cookieBanner');
       banner.style.opacity = '0';
       setTimeout(() => banner.style.display = 'none', 500);
-
 
       if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
         Notification.requestPermission();
@@ -420,16 +421,15 @@
       textIndex = (textIndex + 1) % funnyTexts.length;
       btnNo.innerText = funnyTexts[textIndex];
 
-      // Ingrandisce il tasto "Sì" a ogni tentativo
       yesScale += 0.08;
       btnYes.style.transform = `scale(${yesScale})`;
     }
 
-    // PC: Scappa all'hover
+    // PC: Hover
     btnNo.addEventListener('mouseenter', escapeButton);
     btnNo.addEventListener('mouseover', escapeButton);
 
-    // MOBILE: Scappa prima del click al tocco
+    // MOBILE: Touch immediato
     btnNo.addEventListener('touchstart', (e) => {
       e.preventDefault();
       escapeButton();
@@ -459,7 +459,7 @@
       selectedSlot = slot;
     }
 
-    // 5. INVIO AUTOMATICO SU NTFY
+    // 5. INVIO AUTOMATICO SU NTFY (CORRETTO IN FORMATO JSON, COMPATIBILE AL 100%)
     async function sendConfirmation() {
       const chosenDate = document.getElementById('datePick').value;
       const note = document.getElementById('foodNote').value.trim();
@@ -469,26 +469,31 @@
         return;
       }
 
-      let msg = `📅 Data scelta: ${chosenDate}\n⏰ Momento: ${selectedSlot}`;
-      if (note) msg += `\n💭 Desiderio: ${note}`;
+      let msg = `Data: ${chosenDate}\nMomento: ${selectedSlot}`;
+      if (note) msg += `\nIdea: ${note}`;
 
       const submitBtn = document.querySelector('.btn-submit');
       submitBtn.innerText = "Invio in corso... 🐾";
       submitBtn.disabled = true;
 
       try {
-        // Notifica istantanea all'app ntfy sul tuo telefono
-        await fetch(`https://ntfy.sh/${NTFY_TOPIC}`, {
+        // Invio tramite JSON: supporta emoji, accenti e non da mai errore di headers!
+        const response = await fetch(`https://ntfy.sh`, {
           method: 'POST',
-          body: msg,
-          headers: {
-            'Title': 'Ha detto SÌ all\'uscita! 🎉🐶',
-            'Priority': 'urgent',
-            'Tags': 'tada,dog,heart'
-          }
+          body: JSON.stringify({
+            topic: NTFY_TOPIC,
+            title: "Ha detto SI all'uscita! 🎉🐶",
+            message: msg,
+            priority: 4,
+            tags: ["tada", "dog", "heart"]
+          })
         });
 
-        // Notifica sul dispositivo di lei se consentita
+        if (!response.ok) {
+          throw new Error("Errore server ntfy");
+        }
+
+        // Notifica locale sul dispositivo se consentita
         if ("Notification" in window && Notification.permission === "granted") {
           new Notification("Appuntamento Fissato! 🐾", {
             body: `Ci vediamo il ${chosenDate} (${selectedSlot})!`
@@ -506,7 +511,10 @@
         `;
 
       } catch (error) {
+        console.error(error);
         alert("Errore nell'invio, ma non preoccuparti, riferirò di persona! 🐶");
+        submitBtn.innerText = "dai su conferma";
+        submitBtn.disabled = false;
       }
     }
   </script>
