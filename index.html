@@ -307,7 +307,7 @@
     <div id="step1">
       <div style="font-size: 3.2rem; margin-bottom: 0.3rem;">🐶💌</div>
       <h1>Vuoi uscire con me?</h1>
-      <p class="subtitle">Prometto cagnolini carini, zero noia e tante risate.</p>
+  
       
       <div class="button-group" id="btnContainer">
         <button class="btn btn-yes" id="btnYes" onclick="acceptInvitation()">Sì 🥰</button>
@@ -318,16 +318,16 @@
     <!-- STEP 2: Calendario e orario -->
     <div id="step2" class="calendar-step">
       <div style="font-size: 2.8rem; margin-bottom: 0.3rem;">🐾✨</div>
-      <h1>Sapevo che avresti detto di sì!</h1>
-      <p class="subtitle">Scegli tu il momento ideale:</p>
+      <h1>non hai resistito vero?</h1>
+      <p class="subtitle">il momento ideale:</p>
 
       <div class="form-group">
-        <label for="datePick">Quale giorno preferisci?</label>
+        <label for="datePick">che giorno preferisci?</label>
         <input type="date" id="datePick" required>
       </div>
 
       <div class="form-group">
-        <label>Indicativamente a che ora?</label>
+        <label>che ora?</label>
         <div class="time-slot-grid">
           <div class="time-slot active" onclick="selectSlot(this, 'Mattina ☀️')">Mattina ☀️</div>
           <div class="time-slot" onclick="selectSlot(this, 'Pomeriggio ☕')">Pomeriggio ☕</div>
@@ -336,31 +336,25 @@
       </div>
 
       <div class="form-group">
-        <label for="foodNote">Cosa ti andrebbe di fare? (Opzionale)</label>
-        <input type="text" id="foodNote" placeholder="Gelato, pizza, passeggiata...">
+        <label for="foodNote">che fammo???</label>
+        <input type="text" id="foodNote" placeholder="Gelato, sesso, palestra, cibo cibo ...">
       </div>
 
-      <button class="btn btn-submit" onclick="sendConfirmation()">Conferma appuntamento! 💌</button>
+      <button class="btn btn-submit" onclick="sendConfirmation()">dai su conferma</button>
     </div>
 
   </div>
 
   <script>
-    // ==========================================
-    // ⚙️ CONFIGURA QUI IL TUO CANALE NTFY
-    // ==========================================
-    // Sostituisci la scritta tra virgolette con il nome che hai scelto nella tua app ntfy:
+  
     const NTFY_TOPIC = "appuntamento"; 
-    // ==========================================
-
-
-    // 1. GESTIONE COOKIE
+    // =========================================
     function acceptCookies() {
       const banner = document.getElementById('cookieBanner');
       banner.style.opacity = '0';
       setTimeout(() => banner.style.display = 'none', 500);
 
-      // Chiede consenso notifiche del browser locale
+
       if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
         Notification.requestPermission();
       }
