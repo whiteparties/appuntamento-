@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Verifica di sicurezza & Preferenze 🍪</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-cream: #FDFBF7;
+      --card-bg: rgba(255, 252, 248, 0.92);
+      --primary-rose: #D48C94;
+      --primary-hover: #c4767f;
+      --soft-pink: #F3D8D6;
+      --accent-beige: #EBD9CE;
+      --text-main: #4A3E3D;
+      --text-light: #7E6E6C;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--bg-cream);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Sfondo fotografico cuccioli */
+    .bg-slideshow {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.16;
+      background-size: cover;
+      background-position: center;
+      transition: background-image 1.2s ease-in-out;
+      pointer-events: none;
+    }
+
+    /* Cuccioli che fluttuano */
+    .floating-puppies {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .pup-emoji {
+      position: absolute;
+      font-size: 2rem;
+      opacity: 0.45;
+      animation: floatUp 14s linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(105vh) rotate(0deg); }
+      100% { transform: translateY(-10vh) rotate(360deg); }
+    }
+
+    /* Finto banner cookie */
+    .cookie-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(5px);
+      z-index: 99999;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 1.5rem;
+      transition: opacity 0.5s ease;
+    }
+
+    .cookie-modal {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 1.8rem;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      border: 1px solid var(--accent-beige);
+      animation: slideUp 0.4s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .cookie-modal h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .cookie-modal p {
+      font-size: 0.88rem;
+      color: var(--text-light);
+      line-height: 1.4;
+      margin-bottom: 1.2rem;
+    }
+
+    .cookie-btns {
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    .btn-cookie-accept {
+      flex: 1;
+      background: var(--primary-rose);
+      color: white;
+      border: none;
+      padding: 0.75rem;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .btn-cookie-manage {
+      background: #f0f0f0;
+      color: var(--text-light);
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    /* Card principale */
+    .card {
+      position: relative;
+      z-index: 10;
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 30px;
+      padding: 2.5rem 2rem;
+      width: 90%;
+      max-width: 440px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(184, 150, 145, 0.15);
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      color: var(--text-main);
+      margin-bottom: 0.8rem;
+    }
+
+    p.subtitle {
+      font-size: 0.98rem;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+    }
+
+    /* Pulsanti */
+    .button-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      min-height: 90px;
+      position: relative;
+    }
+
+    .btn {
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      padding: 0.85rem 2.2rem;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s ease;
+    }
+
+    .btn-yes {
+      background-color: var(--primary-rose);
+      color: white;
+      z-index: 2;
+    }
+
+    .btn-yes:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-no {
+      background-color: var(--accent-beige);
+      color: var(--text-main);
+      position: absolute;
+      z-index: 9999;
+      touch-action: none;
+      transition: left 0.18s ease-out, top 0.18s ease-out;
+      white-space: nowrap;
+    }
+
+    /* Step Calendario */
+    .calendar-step {
+      display: none;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 1.4rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.4rem;
+    }
+
+    input[type="date"], input[type="text"] {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      font-family: 'Nunito', sans-serif;
+      border-radius: 14px;
+      border: 1px solid var(--accent-beige);
+      background: white;
+      font-size: 0.95rem;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .time-slot-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem;
+    }
+
+    .time-slot {
+      padding: 0.7rem 0.3rem;
+      background: white;
+      border: 1px solid var(--accent-beige);
+      border-radius: 14px;
+      cursor: pointer;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+
+    .time-slot.active {
+      background: var(--soft-pink);
+      border-color: var(--primary-rose);
+      color: var(--primary-hover);
+    }
+
+    .btn-submit {
+      width: 100%;
+      margin-top: 1rem;
+      background-color: var(--primary-rose);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. FINTO BANNER COOKIE -->
+  <div class="cookie-overlay" id="cookieBanner">
+    <div class="cookie-modal">
+      <h3>Informativa sui Cookie & Privacy 🍪</h3>
+      <p>Questo sito utilizza cookie per garantire un'esperienza ottimale e un elevato livello di dolcezza. Continuando accetti i termini.</p>
+      <div class="cookie-btns">
+        <button class="btn-cookie-manage" onclick="acceptCookies()">Solo necessari</button>
+        <button class="btn-cookie-accept" onclick="acceptCookies()">Accetta tutti i Cookie</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sfondo Cuccioli -->
+  <div class="bg-slideshow" id="slideshow"></div>
+  <div class="floating-puppies" id="puppyContainer"></div>
+
+  <!-- Card Interattiva -->
+  <div class="card" id="mainCard">
+    
+    <!-- STEP 1: La domanda -->
+    <div id="step1">
+      <div style="font-size: 3.2rem; margin-bottom: 0.3rem;">🐶💌</div>
+      <h1>Vuoi uscire con me?</h1>
+      <p class="subtitle">Prometto cagnolini carini, zero noia e tante risate.</p>
+      
+      <div class="button-group" id="btnContainer">
+        <button class="btn btn-yes" id="btnYes" onclick="acceptInvitation()">Sì 🥰</button>
+        <button class="btn btn-no" id="btnNo">No 🙈</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Calendario e orario -->
+    <div id="step2" class="calendar-step">
+      <div style="font-size: 2.8rem; margin-bottom: 0.3rem;">🐾✨</div>
+      <h1>Sapevo che avresti detto di sì!</h1>
+      <p class="subtitle">Scegli tu il momento ideale:</p>
+
+      <div class="form-group">
+        <label for="datePick">Quale giorno preferisci?</label>
+        <input type="date" id="datePick" required>
+      </div>
+
+      <div class="form-group">
+        <label>Indicativamente a che ora?</label>
+        <div class="time-slot-grid">
+          <div class="time-slot active" onclick="selectSlot(this, 'Mattina ☀️')">Mattina ☀️</div>
+          <div class="time-slot" onclick="selectSlot(this, 'Pomeriggio ☕')">Pomeriggio ☕</div>
+          <div class="time-slot" onclick="selectSlot(this, 'Sera 🌙')">Sera 🌙</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="foodNote">Cosa ti andrebbe di fare? (Opzionale)</label>
+        <input type="text" id="foodNote" placeholder="Gelato, pizza, passeggiata...">
+      </div>
+
+      <button class="btn btn-submit" onclick="sendConfirmation()">Conferma appuntamento! 💌</button>
+    </div>
+
+  </div>
+
+  <script>
+    // ==========================================
+    // ⚙️ CONFIGURA QUI IL TUO CANALE NTFY
+    // ==========================================
+    // Sostituisci la scritta tra virgolette con il nome che hai scelto nella tua app ntfy:
+    const NTFY_TOPIC = "appuntamento"; 
+    // ==========================================
+
+
+    // 1. GESTIONE COOKIE
+    function acceptCookies() {
+      const banner = document.getElementById('cookieBanner');
+      banner.style.opacity = '0';
+      setTimeout(() => banner.style.display = 'none', 500);
+
+      // Chiede consenso notifiche del browser locale
+      if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+        Notification.requestPermission();
+      }
+    }
+
+    // 2. SFONDO ROTANTE CON CUCCIOLI
+    const puppies = [
+      'https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1200&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?q=80&w=1200&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1587300003388-59208cc962cb?q=80&w=1200&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?q=80&w=1200&auto=format&fit=crop'
+    ];
+    let currentBg = 0;
+    const bgElem = document.getElementById('slideshow');
+    bgElem.style.backgroundImage = `url('${puppies[0]}')`;
+    setInterval(() => {
+      currentBg = (currentBg + 1) % puppies.length;
+      bgElem.style.backgroundImage = `url('${puppies[currentBg]}')`;
+    }, 4500);
+
+    // EMOJI CANI CHE SALGONO
+    const pupEmojis = ['🐶', '🐕', '🐩', '🐾', '🦴', '✨', '🐾'];
+    const container = document.getElementById('puppyContainer');
+    for (let i = 0; i < 16; i++) {
+      const span = document.createElement('span');
+      span.className = 'pup-emoji';
+      span.innerText = pupEmojis[Math.floor(Math.random() * pupEmojis.length)];
+      span.style.left = Math.random() * 95 + 'vw';
+      span.style.animationDuration = (8 + Math.random() * 10) + 's';
+      span.style.animationDelay = (Math.random() * 7) + 's';
+      container.appendChild(span);
+    }
+
+    // 3. TASTO "NO" IMPOSSIBILE DA CLICCARE (MOBILE + PC)
+    const btnNo = document.getElementById('btnNo');
+    const btnYes = document.getElementById('btnYes');
+    
+    const funnyTexts = [
+      "No 🙈",
+      "Troppo lenta! 🏃💨",
+      "Ops, ritenta! 😜",
+      "Non puoi! 🐶",
+      "Errore 404 🚫",
+      "Ci stai ancora provando? 😂",
+      "Clicca Sì dai! ❤️"
+    ];
+    let textIndex = 0;
+    let yesScale = 1;
+
+    function escapeButton() {
+      const btnWidth = btnNo.offsetWidth || 100;
+      const btnHeight = btnNo.offsetHeight || 45;
+      const maxX = window.innerWidth - btnWidth - 25;
+      const maxY = window.innerHeight - btnHeight - 25;
+
+      const randomX = Math.max(20, Math.floor(Math.random() * maxX));
+      const randomY = Math.max(20, Math.floor(Math.random() * maxY));
+
+      btnNo.style.position = 'fixed';
+      btnNo.style.left = `${randomX}px`;
+      btnNo.style.top = `${randomY}px`;
+
+      textIndex = (textIndex + 1) % funnyTexts.length;
+      btnNo.innerText = funnyTexts[textIndex];
+
+      // Ingrandisce il tasto "Sì" a ogni tentativo
+      yesScale += 0.08;
+      btnYes.style.transform = `scale(${yesScale})`;
+    }
+
+    // PC: Scappa all'hover
+    btnNo.addEventListener('mouseenter', escapeButton);
+    btnNo.addEventListener('mouseover', escapeButton);
+
+    // MOBILE: Scappa prima del click al tocco
+    btnNo.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      escapeButton();
+    }, { passive: false });
+
+    btnNo.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      escapeButton();
+    });
+
+    // 4. TRANSIZIONE STEP 2
+    let selectedSlot = "Mattina ☀️";
+
+    function acceptInvitation() {
+      document.getElementById('step1').style.display = 'none';
+      document.getElementById('step2').style.display = 'block';
+
+      const today = new Date().toISOString().split('T')[0];
+      const dateInput = document.getElementById('datePick');
+      dateInput.min = today;
+      dateInput.value = today;
+    }
+
+    function selectSlot(element, slot) {
+      document.querySelectorAll('.time-slot').forEach(el => el.classList.remove('active'));
+      element.classList.add('active');
+      selectedSlot = slot;
+    }
+
+    // 5. INVIO AUTOMATICO SU NTFY
+    async function sendConfirmation() {
+      const chosenDate = document.getElementById('datePick').value;
+      const note = document.getElementById('foodNote').value.trim();
+
+      if (!chosenDate) {
+        alert("Scegli prima una data! 🐾");
+        return;
+      }
+
+      let msg = `📅 Data scelta: ${chosenDate}\n⏰ Momento: ${selectedSlot}`;
+      if (note) msg += `\n💭 Desiderio: ${note}`;
+
+      const submitBtn = document.querySelector('.btn-submit');
+      submitBtn.innerText = "Invio in corso... 🐾";
+      submitBtn.disabled = true;
+
+      try {
+        // Notifica istantanea all'app ntfy sul tuo telefono
+        await fetch(`https://ntfy.sh/${NTFY_TOPIC}`, {
+          method: 'POST',
+          body: msg,
+          headers: {
+            'Title': 'Ha detto SÌ all\'uscita! 🎉🐶',
+            'Priority': 'urgent',
+            'Tags': 'tada,dog,heart'
+          }
+        });
+
+        // Notifica sul dispositivo di lei se consentita
+        if ("Notification" in window && Notification.permission === "granted") {
+          new Notification("Appuntamento Fissato! 🐾", {
+            body: `Ci vediamo il ${chosenDate} (${selectedSlot})!`
+          });
+        }
+
+        // Schermata di successo
+        document.getElementById('step2').innerHTML = `
+          <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">🥰🐶🎉</div>
+          <h1>È ufficiale!</h1>
+          <p class="subtitle" style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 0.8rem;">
+            Il promemoria è stato inviato con successo.<br>
+            Non vedo l'ora, ci vediamo presto! ✨
+          </p>
+        `;
+
+      } catch (error) {
+        alert("Errore nell'invio, ma non preoccuparti, riferirò di persona! 🐶");
+      }
+    }
+  </script>
+</body>
+</html>
