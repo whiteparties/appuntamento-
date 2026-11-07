@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <!-- Titolo scheda modificato come richiesto -->
-  <title>Appuntamento con Torello 🐾</title>
+  <title>torello</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
@@ -41,19 +40,32 @@
       position: relative;
     }
 
-    /* Sfondo fotografico cuccioli */
-    .bg-slideshow {
+    /* Immagini di Torello spammate sullo sfondo */
+    .bg-spam {
       position: fixed;
       inset: 0;
       z-index: 0;
-      opacity: 0.16;
-      background-size: cover;
-      background-position: center;
-      transition: background-image 1.2s ease-in-out;
+      overflow: hidden;
       pointer-events: none;
     }
 
-    /* Cuccioli che fluttuano */
+    .spam-img {
+      position: absolute;
+      object-fit: contain;
+      border-radius: 12px;
+      opacity: 0;
+      animation: popInOut 4s ease-in-out forwards;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+    }
+
+    @keyframes popInOut {
+      0%   { opacity: 0;    transform: scale(0.3) rotate(var(--rot-start)); }
+      15%  { opacity: 0.7;  transform: scale(1) rotate(var(--rot-mid)); }
+      80%  { opacity: 0.7;  transform: scale(1.05) rotate(var(--rot-mid)); }
+      100% { opacity: 0;    transform: scale(0.6) rotate(var(--rot-end)); }
+    }
+
+    /* Tori che fluttuano */
     .floating-puppies {
       position: fixed;
       inset: 0;
@@ -297,18 +309,18 @@
     </div>
   </div>
 
-  <!-- Sfondo Cuccioli -->
-  <div class="bg-slideshow" id="slideshow"></div>
+  <!-- Sfondo Torello (immagini spammate) -->
+  <div class="bg-spam" id="spamContainer"></div>
   <div class="floating-puppies" id="puppyContainer"></div>
 
   <!-- Card Interattiva -->
   <div class="card" id="mainCard">
-    
+
     <!-- STEP 1: La domanda -->
     <div id="step1">
-      <div style="font-size: 3.2rem; margin-bottom: 0.3rem;">🐶💌</div>
+      <div style="font-size: 3.2rem; margin-bottom: 0.3rem;">🐂</div>
       <h1>Vuoi uscire con me?</h1>
-      
+
       <div class="button-group" id="btnContainer">
         <button class="btn btn-yes" id="btnYes" onclick="acceptInvitation()">Sì 🥰</button>
         <button class="btn btn-no" id="btnNo">No 🙈</button>
@@ -317,7 +329,7 @@
 
     <!-- STEP 2: Calendario e orario -->
     <div id="step2" class="calendar-step">
-      <div style="font-size: 2.8rem; margin-bottom: 0.3rem;">🐾✨</div>
+      <div style="font-size: 2.8rem; margin-bottom: 0.3rem;">✨</div>
       <h1>non hai resistito vero? sei una debole</h1>
       <p class="subtitle">il momento ideale:</p>
 
@@ -329,15 +341,15 @@
       <div class="form-group">
         <label>che ora?</label>
         <div class="time-slot-grid">
-          <div class="time-slot active" onclick="selectSlot(this, 'Mattina ☀️')">Mattina ☀️</div>
-          <div class="time-slot" onclick="selectSlot(this, 'Pomeriggio ☕')">Pomeriggio ☕</div>
-          <div class="time-slot" onclick="selectSlot(this, 'Sera 🌙')">Sera 🌙</div>
+          <div class="time-slot active" onclick="selectSlot(this, 'Mattina')">Mattina </div>
+          <div class="time-slot" onclick="selectSlot(this, 'Pomeriggio')">Pomeriggio </div>
+          <div class="time-slot" onclick="selectSlot(this, 'Sera')">Sera </div>
         </div>
       </div>
 
       <div class="form-group">
         <label for="foodNote">che fammo???</label>
-        <input type="text" id="foodNote" placeholder="Gelato, sesso, palestra, cibo cibo ...">
+        <input type="text" id="foodNote" placeholder="gelato, sesso, palestra, cibo cibo ...">
       </div>
 
       <button class="btn btn-submit" onclick="sendConfirmation()">dai su conferma</button>
@@ -347,8 +359,7 @@
 
   <script>
     // ==========================================
- 
-    const NTFY_TOPIC = "appuntamento-torello"; 
+    const NTFY_TOPIC = "appuntamento-torello";
     // ==========================================
 
     function acceptCookies() {
@@ -361,23 +372,54 @@
       }
     }
 
-    // 2. SFONDO ROTANTE CON CUCCIOLI
-    const puppies = [
-      'https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1200&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?q=80&w=1200&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1587300003388-59208cc962cb?q=80&w=1200&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?q=80&w=1200&auto=format&fit=crop'
+    // 2. SFONDO: IMMAGINI DI TORELLO SPAMMATE (piccole, anche tutte e 5 insieme)
+    const torelloImages = [
+      'https://tntorello.com/wp-content/uploads/2024/03/logo-torello-1.svg',
+      'https://png.pngtree.com/png-clipart/20250209/original/pngtree-bull-picture-png-image_20398399.png',
+      'https://irrigazioneshop.com/wp-content/uploads/2022/12/toro-logo-1200x1200-1.jpg',
+      'https://www.chiacchierini.it/wp-content/uploads/carne/bianca-blu-belga/bbg-elk-234/BBG-ELK-234-2488-400x296.jpg',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvbkXtkGG7RdefmOJT3WR433vn96sd2vTQJYSXbXMeTw&s=10'
     ];
-    let currentBg = 0;
-    const bgElem = document.getElementById('slideshow');
-    bgElem.style.backgroundImage = `url('${puppies[0]}')`;
-    setInterval(() => {
-      currentBg = (currentBg + 1) % puppies.length;
-      bgElem.style.backgroundImage = `url('${puppies[currentBg]}')`;
-    }, 4500);
 
-    // EMOJI CANI CHE SALGONO
-    const pupEmojis = ['🐶', '🐕', '🐩', '🐾', '🦴', '✨', '🐾'];
+    const spamContainer = document.getElementById('spamContainer');
+    const MAX_SPAM = 28;
+
+    function spawnImage(src) {
+      if (spamContainer.children.length >= MAX_SPAM) return;
+
+      const img = document.createElement('img');
+      img.className = 'spam-img';
+      img.src = src || torelloImages[Math.floor(Math.random() * torelloImages.length)];
+      img.alt = '';
+      img.draggable = false;
+
+      const size = 60 + Math.random() * 80; // 60-140px
+      img.style.width = size + 'px';
+      img.style.height = size + 'px';
+      img.style.left = Math.random() * (window.innerWidth - size) + 'px';
+      img.style.top = Math.random() * (window.innerHeight - size) + 'px';
+
+      const rot = () => (Math.random() * 40 - 20) + 'deg';
+      img.style.setProperty('--rot-start', rot());
+      img.style.setProperty('--rot-mid', rot());
+      img.style.setProperty('--rot-end', rot());
+      img.style.animationDuration = (3 + Math.random() * 3) + 's';
+
+      img.addEventListener('animationend', () => img.remove());
+      img.addEventListener('error', () => img.remove());
+      spamContainer.appendChild(img);
+    }
+
+    // Burst iniziale: tutte e 5 insieme
+    torelloImages.forEach(src => spawnImage(src));
+    // Spam continuo
+    setInterval(() => {
+      spawnImage();
+      if (Math.random() > 0.5) spawnImage();
+    }, 350);
+
+    // EMOJI TORI CHE SALGONO
+    const pupEmojis = ['🐂', '🐂', '🐂', '🐃', '🐂', '✨'];
     const container = document.getElementById('puppyContainer');
     for (let i = 0; i < 16; i++) {
       const span = document.createElement('span');
@@ -392,12 +434,12 @@
     // 3. TASTO "NO" IMPOSSIBILE DA CLICCARE (MOBILE + PC)
     const btnNo = document.getElementById('btnNo');
     const btnYes = document.getElementById('btnYes');
-    
+
     const funnyTexts = [
       "No 🙈",
       "Troppo lenta! 🏃💨",
       "Ops, ritenta! 😜",
-      "Non puoi! 🐶",
+      "Non puoi! 🐂",
       "Errore 404 🚫",
       "Ci stai ancora provando? 😂",
       "Clicca Sì dai! ❤️"
@@ -441,7 +483,7 @@
     });
 
     // 4. TRANSIZIONE STEP 2
-    let selectedSlot = "Mattina ☀️";
+    let selectedSlot = "Mattina";
 
     function acceptInvitation() {
       document.getElementById('step1').style.display = 'none';
@@ -459,13 +501,13 @@
       selectedSlot = slot;
     }
 
-    // 5. INVIO AUTOMATICO SU NTFY (CORRETTO IN FORMATO JSON, COMPATIBILE AL 100%)
+    // 5. INVIO AUTOMATICO SU NTFY
     async function sendConfirmation() {
       const chosenDate = document.getElementById('datePick').value;
       const note = document.getElementById('foodNote').value.trim();
 
       if (!chosenDate) {
-        alert("Scegli prima una data! 🐾");
+        alert("Scegli prima una data! 🐂");
         return;
       }
 
@@ -473,19 +515,18 @@
       if (note) msg += `\nIdea: ${note}`;
 
       const submitBtn = document.querySelector('.btn-submit');
-      submitBtn.innerText = "Invio in corso... 🐾";
+      submitBtn.innerText = "Invio in corso... 🐂";
       submitBtn.disabled = true;
 
       try {
-        // Invio tramite JSON: supporta emoji, accenti e non da mai errore di headers!
         const response = await fetch(`https://ntfy.sh`, {
           method: 'POST',
           body: JSON.stringify({
             topic: NTFY_TOPIC,
-            title: "Ha detto SI all'uscita! 🎉🐶",
+            title: "Ha detto SI all'uscita! 🎉🐂",
             message: msg,
             priority: 4,
-            tags: ["tada", "dog", "heart"]
+            tags: ["tada", "ox", "heart"]
           })
         });
 
@@ -493,16 +534,14 @@
           throw new Error("Errore server ntfy");
         }
 
-        // Notifica locale sul dispositivo se consentita
         if ("Notification" in window && Notification.permission === "granted") {
-          new Notification("Appuntamento Fissato! 🐾", {
+          new Notification("Appuntamento Fissato! 🐂", {
             body: `Ci vediamo il ${chosenDate} (${selectedSlot})!`
           });
         }
 
-        // Schermata di successo
         document.getElementById('step2').innerHTML = `
-          <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">🥰🐶🎉</div>
+          <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">🐂</div>
           <h1>È ufficiale!</h1>
           <p class="subtitle" style="font-size: 1.05rem; line-height: 1.5; margin-bottom: 0.8rem;">
             Il promemoria è stato inviato con successo.<br>
@@ -512,7 +551,7 @@
 
       } catch (error) {
         console.error(error);
-        alert("Errore nell'invio, ma non preoccuparti, riferirò di persona! 🐶");
+        alert("Errore nell'invio, ma non preoccuparti, riferirò di persona! 🐂");
         submitBtn.innerText = "dai su conferma";
         submitBtn.disabled = false;
       }
